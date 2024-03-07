@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/register.css">
+    <style>
+        .form-cont {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px; /* Adjust the border-radius value based on your preference */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Increased intensity shadow */
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-cont">
+        <div class="head">
+            <h1>Welcome To Expense Manager</h1><br>
+            <p>Register to Expense Manager</p>
+        </div>
+
+        <form action="/register" method="post">
+            <label for="username">
+                Username <br> <br>
+                <input type="text" name="username" id="username" placeholder="Username" required>
+            </label>
+            <label for="password">
+                Password <br> <br>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+            </label>
+            <button class="login-btn">Sign Up</button>
+        </form>
+    </div>
+</body>
+
+</html>

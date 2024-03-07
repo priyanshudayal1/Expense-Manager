@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <style>
+        .form-cont {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px; /* Adjust the border-radius value based on your preference */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Increased intensity shadow */
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-cont">
+        <div class="head">
+            <h1>Welcome To Expense Manager</h1>
+            <br> 
+            <p>Login to your Account</p>
+        </div>
+        <form action="/login" method="post">
+            <label for="username" class="form-label">
+                Username <br> <br>
+                <input type="text" id="username" name="username" placeholder="Username" required class="form-control">
+            </label>
+            <label for="password" class="form-label">
+                Password <br> <br>
+                <input type="password" id="password" name="password" placeholder="Password" required class="form-control">
+            </label>
+            <span class="register">don't have an account ? <a href="/register">Register Now</a></span>
+            <button class="login-btn">Login</button>
+        </form>
+    </div>
+</body>
+
+</html>
