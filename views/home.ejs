@@ -200,6 +200,26 @@
             padding: 6px 40px;
             border-radius: 10px;
         }
+
+    
+
+        #monthlyExpensesChart,
+        #categoryExpensesChart {
+            width: 700px !important;
+            height: 300px !important;
+        }
+        .graphs{
+            padding: 20px !important;
+            display: flex;
+            flex-direction: row !important;
+            gap: 1rem !important;
+            border: 1px solid #ddd;
+            /* Light border color */
+            border-radius: 20px;
+            /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            justify-content: space-evenly !important;
+        }
     </style>
 </head>
 
@@ -223,12 +243,6 @@
         </div>
     </nav>
     <div class="main">
-        <!-- Verify the canvas element in the script -->
-        <div class="expenses-chart-container">
-            <canvas id="expensesChart"></canvas>
-        </div>
-
-
         <!-- Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -273,8 +287,10 @@
             </div>
         </div>
         <div class="Expenses mt-4">
-
             <div class="sorted-expenses">
+                <div class="sorted-head">
+                    <h1>Expenses</h1>
+                </div>
                 <div class="options">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
@@ -320,9 +336,7 @@
                         <a href="/home/<%= username %>?category=all&isAll=1"><button class="all-btn">All</button></a>
                     </div>
                 </div>
-                <div class="sorted-head">
-                    <h1>Sorted Expenses</h1>
-                </div>
+
                 <!-- The container for displaying expenses -->
                 <div class="expenses-container">
 
@@ -466,107 +480,14 @@
 
                 </div>
             </div>
-            <div class="categories-expenses">
-                <div class="categories-head">
-                    <h1>Categories Expenses</h1>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Select Category
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item" href="/home/<%= username %>?category=all">All</a></li>
-                            <li><a class="dropdown-item" href="/home/<%= username %>?category=food">Food</a></li>
-                            <li><a class="dropdown-item"
-                                    href="/home/<%= username %>?category=transportation">Transportation</a>
-                            </li>
-                            <li><a class="dropdown-item" href="/home/<%= username %>?category=utilities">Utilities</a>
-                            </li>
-                            <li><a class="dropdown-item"
-                                    href="/home/<%= username %>?category=entertainment">Entertainment</a>
-                            </li>
-                            <li><a class="dropdown-item" href="/home/<%= username %>?category=others">Others</a></li>
-                        </ul>
-                    </div>
+            <div class="graphs">
+                <!-- Add a canvas for the monthly expenses chart -->
+                <div class="expenses-chart-container">
+                    <canvas id="monthlyExpensesChart"></canvas>
                 </div>
-                <div class="expenses-container">
-                    <% if (categorizedExpenses.length> 0) { %>
-                        <% categorizedExpenses.forEach(expense=> { %>
-                            <div class="card text-center exp-card">
-                                <div class="card-header">
-                                    <button class="food" id="<%=expense.category%>">
-                                        <%= expense.category %>
-                                    </button>
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title fw-semibold">
-                                        <%= expense.title %>
-                                    </h5>
-                                    <p class="card-text">
-                                        <%= expense.description %>.
-                                    </p>
-                                    <p class="card-text"><i class="fa-solid fa-indian-rupee-sign"></i>&nbsp;<%=
-                                            expense.amount %>
-                                    </p>
-                                    <p>
-                                        <%= expense.date.toLocaleDateString()%>
-                                    </p>
-
-                                </div>
-                                <div class="card-footer card-foot text-body-secondary" id="card-foot">
-                                    <form method="POST"
-                                        action="/expense/<%= username %>/delete/<%= expense._id %>?_method=DELETE">
-                                        <button class="btn btn-danger del-btn"><i class="fa-solid fa-trash"></i> &nbsp;
-                                            Delete</button>
-                                    </form>
-                                </div>
-                            </div>
-                            <% }); %>
-                                <% } else { %>
-                                    <h2 class="text-center">No expenses found.</h2>
-                                    <% } %>
-                </div>
-            </div>
-            <div class="all-expenses">
-                <div class="exp-head">
-                    <h1>All The Expenses</h1>
-                </div>
-                <div class="expenses-container">
-                    <% if (expenses.length> 0) { %>
-                        <% expenses.forEach(expense=> { %>
-                            <div class="card text-center exp-card">
-                                <div class="card-header">
-                                    <button class="food" id="<%=expense.category%>">
-                                        <%= expense.category %>
-                                    </button>
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title fw-semibold">
-                                        <%= expense.title %>
-                                    </h5>
-                                    <p class="card-text">
-                                        <%= expense.description %>.
-                                    </p>
-                                    <p class="card-text"><i class="fa-solid fa-indian-rupee-sign"></i>&nbsp;<%=
-                                            expense.amount %>
-                                    </p>
-                                    <p>
-                                        <%= expense.date.toLocaleDateString() %>
-                                    </p>
-
-                                </div>
-                                <div class="card-footer card-foot text-body-secondary" id="card-foot">
-                                    <form method="POST"
-                                        action="/expense/<%= username %>/delete/<%= expense._id %>?_method=DELETE">
-                                        <button class="btn btn-danger del-btn"><i class="fa-solid fa-trash"></i> &nbsp;
-                                            Delete</button>
-                                    </form>
-                                </div>
-                            </div>
-                            <% }); %>
-                                <% } else { %>
-                                    <h2 class="text-center">No expenses found.</h2>
-                                    <% } %>
+                <!-- Add a canvas for the category expenses chart -->
+                <div class="expenses-chart-container">
+                    <canvas id="categoryExpensesChart"></canvas>
                 </div>
             </div>
         </div>
@@ -582,7 +503,82 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const expensesData = <%- JSON.stringify(expenses) %>;
 
+        // Extracting month names and total expenses per month
+        const months = Array.from({ length: 12 }, (_, i) => (new Date(0, i)).toLocaleString('en-US', { month: 'short' }));
+        const expensesPerMonth = Array.from({ length: 12 }, () => 0);
+
+        expensesData.forEach(expense => {
+            const date = new Date(expense.date);
+            if (!isNaN(date)) {
+                const monthIndex = date.getMonth();
+                expensesPerMonth[monthIndex] += expense.amount;
+            }
+        });
+        // Chart.js initialization for monthly expenses
+        const monthlyCtx = document.getElementById('monthlyExpensesChart').getContext('2d');
+        const monthlyChart = new Chart(monthlyCtx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Monthly Expenses',
+                    data: expensesPerMonth,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Extract categories and calculate total expenses for each category
+        const categories = ['Food', 'Transportation', 'Utilities', 'Entertainment', 'Others'];
+        const expensesByCategory = Array.from({ length: categories.length }, () => 0);
+
+        expensesData.forEach(expense => {
+            const categoryIndex = categories.indexOf(expense.category);
+            if (categoryIndex !== -1) {
+                expensesByCategory[categoryIndex] += expense.amount;
+            }
+        });
+
+        
+        // Chart.js initialization for category expenses
+        const categoryCtx = document.getElementById('categoryExpensesChart').getContext('2d');
+        const categoryChart = new Chart(categoryCtx, {
+            type: 'bar',
+            data: {
+                labels: categories,
+                datasets: [{
+                    label: 'Total Expenses by Category',
+                    data: expensesByCategory,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        console.log('Expenses data:', expensesData);
+        console.log('Expenses per month:', expensesPerMonth);
+        console.log('Categories:', categories);
+        console.log('Expenses by category:', expensesByCategory);
+    </script>
 </body>
 
 </html>

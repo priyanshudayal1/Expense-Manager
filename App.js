@@ -82,6 +82,10 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
     const { username, password } = req.body;
     try {
+        let {isAll,isSorted,isByCategory } = req.query;
+        if (isAll===undefined && isByCategory===undefined && isSorted===undefined){
+            isAll=1;
+        };
         const user = await User.findOne({ username: username });
         if (!user) {
             res.render("error.ejs", { err: "No User with this Username Not Exists" });
@@ -94,7 +98,7 @@ app.post("/login", async (req, res) => {
         const sortedExpenses = await Expense.find({ user: user._id }).populate("user");
         const expenses = await Expense.find({ user: user._id }).populate("user");
         const categorizedExpenses = await Expense.find({ user: user._id }).populate("user");
-        res.render("home.ejs", { username: username, expenses: expenses, sortedExpenses: sortedExpenses, categorizedExpenses: categorizedExpenses });
+        res.render("home.ejs", { username: username, expenses: expenses, sortedExpenses: sortedExpenses, categorizedExpenses: categorizedExpenses,isAll,isSorted,isByCategory });
     } catch (err) {
         res.render("error.ejs", { err: err });
     }
@@ -105,10 +109,9 @@ app.get("/home/:username", async (req, res) => {
     try {
         const { username } = req.params;
         let { sort, category,isAll,isSorted,isByCategory } = req.query;
-        if (isAll===undefined){
+        if (isAll===undefined && isByCategory===undefined && isSorted===undefined){
             isAll=1;
-        }
-        console.log(isAll);
+        };
         // Assuming User is your Mongoose model for users
         const user = await User.findOne({ username });
 
@@ -198,6 +201,10 @@ app.post("/expense/:username/new", async (req, res) => {
 //Deleting the Expense
 app.delete("/expense/:username/delete/:id", async (req, res) => {
     try {
+        let {isAll,isSorted,isByCategory } = req.query;
+        if (isAll===undefined && isByCategory===undefined && isSorted===undefined){
+            isAll=1;
+        };
         const { id, username } = req.params;
         let expense = await Expense.findByIdAndDelete(id);
         const user = await User.findOne({ username: username });
@@ -205,7 +212,7 @@ app.delete("/expense/:username/delete/:id", async (req, res) => {
         const sortedExpenses = await Expense.find({ user: user._id }).populate("user");
         const expenses = await Expense.find({ user: user._id }).populate("user");
         const categorizedExpenses = await Expense.find({ user: user._id }).populate("user");
-        res.render("home.ejs", { username: username, sortedExpenses: sortedExpenses,expenses,categorizedExpenses });
+        res.render("home.ejs", { username: username, sortedExpenses: sortedExpenses,expenses,categorizedExpenses ,isSorted,isAll,isByCategory});
     } catch (err) {
         res.render("error.ejs", { err: err });
     }
