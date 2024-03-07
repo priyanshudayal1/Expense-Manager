@@ -189,8 +189,9 @@
             display: flex;
             flex-direction: row;
             justify-content: center;
-            gap: 2rem;
+            gap: 1rem;
             padding: 10px 20px;
+
         }
 
         .all-btn {
@@ -220,13 +221,75 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             justify-content: space-evenly !important;
         }
+
+        @media (max-width:1480px) {
+            #monthlyExpensesChart,#categoryExpensesChart {
+                width: 500px !important;
+                height: 200px !important;
+            }
+        }
+
+        @media (max-width: 1080px) {
+            .options {
+                /* Your styles for screens with a minimum width of 1080 pixels */
+                display: flex;
+                gap: 2rem;
+                justify-content: center;
+            }
+        
+            .btns {
+                /* Your styles for screens with a minimum width of 1080 pixels */
+                display: flex;
+                gap: 2rem;
+                justify-content: flex-end;
+            }
+            #monthlyExpensesChart,#categoryExpensesChart {
+                width: 350px !important;
+                height: 200px !important;
+            }
+        }
+        @media (min-width: 1080px) and (max-width: 830px) {
+            .options {
+                /* Your styles for screens with a minimum width of 1080 pixels */
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+            }
+        
+            .btns {
+                /* Your styles for screens with a minimum width of 1080 pixels */
+                display: flex;
+                gap: 1rem;
+                justify-content: flex-end;
+            }
+            #monthlyExpensesChart,#categoryExpensesChart {
+                width: 350px !important;
+                height: 200px !important;
+            }
+            .graphs{
+                flex-direction: column !important;
+
+            }
+        }
+
+        @media (max-width:830px) and (min-width: 420px) {
+            #monthlyExpensesChart,#categoryExpensesChart {
+                width: 200px !important;
+                height: 100px !important;
+            }
+            .graphs{
+                flex-direction: column !important;
+
+            }
+        }
+
+        
     </style>
 </head>
 
 <body>
     <nav class="navbar sticky-top p-3">
         <div class="container-fluid">
-
             <a class="navbar-brand fs-3 fw-bold" href="/home/<%= username %>"><img src="/main_gif.gif" width="80px"
                     alt="Logo"> &nbsp; Expense Manager</a>
             <div class="btns">
