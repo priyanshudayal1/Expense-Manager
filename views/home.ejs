@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="shortcut icon" href="/main.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -97,6 +98,7 @@
             gap: 2rem;
             padding: 20px;
         }
+
         .sorted-expenses,
         .all-expenses,
         .categories-expenses {
@@ -111,16 +113,19 @@
             padding: 15px;
             /* Add padding for content spacing */
         }
-        .del-btn{
+
+        .del-btn {
             padding: 3px 10px;
             font-size: 15px;
         }
-        .card-body{
+
+        .card-body {
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
         }
-        .add-new{
+
+        .add-new {
             font-size: 28px;
             font-weight: 800;
             background-color: #4361ee;
@@ -129,40 +134,71 @@
             text-align: center;
             padding: 6px;
         }
-        .add-btn{
+
+        .add-btn {
             border: none;
-            padding:0px 20px !important ;
+            padding: 0px 20px !important;
             border-radius: 20px;
             background-color: #f72585;
         }
-        .add-btn:hover{
+
+        .add-btn:hover {
             background-color: #f72585;
         }
-        .btn-group a{
+
+        .btn-group a {
             background-color: #4361ee;
             border: 1px solid white;
         }
-        .btn-group a:hover{
+
+        .btn-group a:hover {
             background-color: #424649;
         }
-        .dropdown button{
+
+        .dropdown button {
             background-color: #4361ee;
         }
-        .dropdown button:hover{
+
+        .dropdown button:hover {
             background-color: #4361ee;
             border: 1px solid white;
         }
-        .del-btn{
+
+        .del-btn {
             background-color: #ef233c;
         }
-        .big-add{
+
+        .big-add {
             border: none;
             border-radius: 10px !important;
-            padding: 5px 15px;
+            padding: 10px 20px !important;
         }
-        .navbar{
+
+        .navbar {
             background-color: #4361ee;
             color: white !important;
+        }
+
+        .expenses-container h2 {
+            text-align: center;
+            align-self: center;
+            justify-content: center;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 2rem;
+            padding: 10px 20px;
+        }
+
+        .all-btn {
+            background-color: #4361ee;
+            border: none;
+            color: white;
+            padding: 6px 40px;
+            border-radius: 10px;
         }
     </style>
 </head>
@@ -170,23 +206,33 @@
 <body>
     <nav class="navbar sticky-top p-3">
         <div class="container-fluid">
-            <a class="navbar-brand fs-4 fw-bold" href="#">Expense Manager</a>
+
+            <a class="navbar-brand fs-3 fw-bold" href="/home/<%= username %>"><img src="/main_gif.gif" width="80px"
+                    alt="Logo"> &nbsp; Expense Manager</a>
             <div class="btns">
-                <button type="button" class="btn btn-primary add-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <button type="button" class="btn btn-primary add-btn" data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop">
                     <i class="fa-solid fa-plus"></i> &nbsp; Add Expense
                 </button>
-                <a href="#"><button class="btn usr-btn btn-dark"><i class="fa-solid fa-user"></i> &nbsp; <%= username
-                            %> </button></a>
-                <a href="/logout"><button class="btn btn-dark p-2 px-4"><i class="fa-solid fa-right-from-bracket"></i> &nbsp;
+                <a href="#"><button class="btn usr-btn btn-dark"><i class="fa-solid fa-user"></i> &nbsp; <%= username %>
+                    </button></a>
+                <a href="/logout"><button class="btn btn-dark p-2 px-4"><i class="fa-solid fa-right-from-bracket"></i>
+                        &nbsp;
                         Logout</button></a>
             </div>
         </div>
     </nav>
     <div class="main">
+        <!-- Verify the canvas element in the script -->
+        <div class="expenses-chart-container">
+            <canvas id="expensesChart"></canvas>
+        </div>
+
+
         <!-- Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel">New Expense</h1>
@@ -217,7 +263,7 @@
                                 </select>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary add-btn big-add"><i
                                         class="fa-solid fa-plus"></i>&nbsp;Add</button>
                             </div>
@@ -226,52 +272,198 @@
                 </div>
             </div>
         </div>
-        <div class="Expenses">
+        <div class="Expenses mt-4">
+
             <div class="sorted-expenses">
-                <div class="sorted-head">
-                    <h1>Sorted Expenses</h1>
-                    <div class="btn-group">
-                        <a href="/home/<%= username %>?sort=name" class="btn btn-secondary">Sort by Name</a>
-                        <a href="/home/<%= username %>?sort=date" class="btn btn-secondary">Sort by Date</a>
-                        <a href="/home/<%= username %>?sort=amount" class="btn btn-secondary">Sort by Amount</a>
-                        <a href="/home/<%= username %>" class="btn btn-secondary">Reset Sorting</a>
+                <div class="options">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Sort By
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="/home/<%= username %>?sort=name&isSorted=1" class="">Sort
+                                    by
+                                    Name</a></li>
+                            <li><a class="dropdown-item" href="/home/<%= username %>?sort=date&isSorted=1" class="">Sort
+                                    by
+                                    Date</a></li>
+                            <li><a class="dropdown-item" href="/home/<%= username %>?sort=amount&isSorted=1"
+                                    class="">Sort by
+                                    Amount</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Select Category
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item"
+                                    href="/home/<%= username %>?category=all&isByCategory=1">All</a></li>
+                            <li><a class="dropdown-item"
+                                    href="/home/<%= username %>?category=food&isByCategory=1">Food</a></li>
+                            <li><a class="dropdown-item"
+                                    href="/home/<%= username %>?category=transportation&isByCategory=1">Transportation</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="/home/<%= username %>?category=utilities&isByCategory=1">Utilities</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="/home/<%= username %>?category=entertainment&isByCategory=1">Entertainment</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="/home/<%= username %>?category=others&isByCategory=1">Others</a></li>
+                        </ul>
+                    </div>
+                    <div class="all">
+                        <a href="/home/<%= username %>?category=all&isAll=1"><button class="all-btn">All</button></a>
                     </div>
                 </div>
-
+                <div class="sorted-head">
+                    <h1>Sorted Expenses</h1>
+                </div>
                 <!-- The container for displaying expenses -->
                 <div class="expenses-container">
-                    <% if (sortedExpenses.length> 0) { %>
-                        <% sortedExpenses.forEach(expense=> { %>
-                            <div class="card text-center exp-card">
-                                <div class="card-header">
-                                    <button class="food" id="<%=expense.category%>">
-                                        <%= expense.category %>
-                                    </button>
+
+                    <!-- Expenses sort by -->
+                    <% if (isSorted) { %>
+                        <% if (sortedExpenses.length> 0) { %>
+                            <% sortedExpenses.forEach(expense=> { %>
+                                <div class="card text-center exp-card">
+                                    <div class="card-header">
+                                        <button class="food" id="<%=expense.category%>">
+                                            <%= expense.category %>
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-semibold">
+                                            <%= expense.title %>
+                                        </h5>
+                                        <p class="card-text">
+                                            <%= expense.description %>.
+                                        </p>
+                                        <p class="card-text"><i class="fa-solid fa-indian-rupee-sign"></i>&nbsp;<%=
+                                                expense.amount %>
+                                        </p>
+                                        <p>Created on : <%= expense.date.toLocaleDateString() %>
+                                        </p>
+                                    </div>
+                                    <div class="card-footer card-foot text-body-secondary" id="card-foot">
+                                        <form method="POST"
+                                            action="/expense/<%= username %>/delete/<%= expense._id %>?_method=DELETE">
+                                            <button class="btn btn-danger del-btn"><i class="fa-solid fa-trash"></i>
+                                                &nbsp;
+                                                Delete</button>
+                                        </form>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <h5 class="card-title fw-semibold">
-                                        <%= expense.title %>
-                                    </h5>
-                                    <p class="card-text">
-                                        <%= expense.description %>.
-                                    </p>
-                                    <p class="card-text"><i class="fa-solid fa-indian-rupee-sign"></i>&nbsp;<%=
-                                            expense.amount %>
-                                    </p>
-                                    <p>Created on : <%= expense.date.toLocaleDateString() %>
-                                    </p>
-                                </div>
-                                <div class="card-footer card-foot text-body-secondary" id="card-foot">
-                                    <form method="POST"
-                                        action="/expense/<%= username %>/delete/<%= expense._id %>?_method=DELETE">
-                                        <button class="btn btn-danger del-btn"><i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
-                                    </form>
-                                </div>
-                            </div>
-                            <% }); %>
-                                <% } else { %>
-                                    <p>No expenses found.</p>
-                                    <% } %>
+                                <% }); %>
+                                    <% } else { %>
+                                        <h2 class="text-center">No expenses found.</h2>
+                                        <% } %>
+                                            <% } %>
+
+                                                <!-- Expenses by Category -->
+                                                <% if (isByCategory) { %>
+                                                    <% if (categorizedExpenses.length> 0) { %>
+                                                        <% categorizedExpenses.forEach(expense=> { %>
+                                                            <div class="card text-center exp-card">
+                                                                <div class="card-header">
+                                                                    <button class="food" id="<%=expense.category%>">
+                                                                        <%= expense.category %>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title fw-semibold">
+                                                                        <%= expense.title %>
+                                                                    </h5>
+                                                                    <p class="card-text">
+                                                                        <%= expense.description %>.
+                                                                    </p>
+                                                                    <p class="card-text"><i
+                                                                            class="fa-solid fa-indian-rupee-sign"></i>&nbsp;
+                                                                        <%= expense.amount %>
+                                                                    </p>
+                                                                    <p>
+                                                                        <%= expense.date.toLocaleDateString()%>
+                                                                    </p>
+
+                                                                </div>
+                                                                <div class="card-footer card-foot text-body-secondary"
+                                                                    id="card-foot">
+                                                                    <form method="POST"
+                                                                        action="/expense/<%= username %>/delete/<%= expense._id %>?_method=DELETE">
+                                                                        <button class="btn btn-danger del-btn"><i
+                                                                                class="fa-solid fa-trash"></i> &nbsp;
+                                                                            Delete</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                            <% }); %>
+                                                                <% } else { %>
+                                                                    <h2 class="text-center">No expenses found.</h2>
+                                                                    <% } %>
+                                                                        <% } %>
+
+
+                                                                            <!-- All Expenses  -->
+
+                                                                            <% if (isAll) { %>
+
+                                                                                <% if (expenses.length> 0) { %>
+                                                                                    <% expenses.forEach(expense=> { %>
+                                                                                        <div
+                                                                                            class="card text-center exp-card">
+                                                                                            <div class="card-header">
+                                                                                                <button class="food"
+                                                                                                    id="<%=expense.category%>">
+                                                                                                    <%= expense.category
+                                                                                                        %>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div class="card-body">
+                                                                                                <h5
+                                                                                                    class="card-title fw-semibold">
+                                                                                                    <%= expense.title %>
+                                                                                                </h5>
+                                                                                                <p class="card-text">
+                                                                                                    <%= expense.description
+                                                                                                        %>.
+                                                                                                </p>
+                                                                                                <p class="card-text"><i
+                                                                                                        class="fa-solid fa-indian-rupee-sign"></i>&nbsp;
+                                                                                                    <%= expense.amount
+                                                                                                        %>
+                                                                                                </p>
+                                                                                                <p>
+                                                                                                    <%= expense.date.toLocaleDateString()
+                                                                                                        %>
+                                                                                                </p>
+
+                                                                                            </div>
+                                                                                            <div class="card-footer card-foot text-body-secondary"
+                                                                                                id="card-foot">
+                                                                                                <form method="POST"
+                                                                                                    action="/expense/<%= username %>/delete/<%= expense._id %>?_method=DELETE">
+                                                                                                    <button
+                                                                                                        class="btn btn-danger del-btn"><i
+                                                                                                            class="fa-solid fa-trash"></i>
+                                                                                                        &nbsp;
+                                                                                                        Delete</button>
+                                                                                                </form>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <% }); %>
+                                                                                            <% } else { %>
+                                                                                                <h2 class="text-center">
+                                                                                                    No expenses
+                                                                                                    found.
+                                                                                                </h2>
+                                                                                                <% } %>
+                                                                                                    <% } %>
+
+
                 </div>
             </div>
             <div class="categories-expenses">
@@ -280,9 +472,10 @@
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            All Categories
+                            Select Category
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="/home/<%= username %>?category=all">All</a></li>
                             <li><a class="dropdown-item" href="/home/<%= username %>?category=food">Food</a></li>
                             <li><a class="dropdown-item"
                                     href="/home/<%= username %>?category=transportation">Transportation</a>
@@ -323,13 +516,14 @@
                                 <div class="card-footer card-foot text-body-secondary" id="card-foot">
                                     <form method="POST"
                                         action="/expense/<%= username %>/delete/<%= expense._id %>?_method=DELETE">
-                                        <button class="btn btn-danger del-btn"><i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+                                        <button class="btn btn-danger del-btn"><i class="fa-solid fa-trash"></i> &nbsp;
+                                            Delete</button>
                                     </form>
                                 </div>
                             </div>
                             <% }); %>
                                 <% } else { %>
-                                    <p>No expenses found.</p>
+                                    <h2 class="text-center">No expenses found.</h2>
                                     <% } %>
                 </div>
             </div>
@@ -364,13 +558,14 @@
                                 <div class="card-footer card-foot text-body-secondary" id="card-foot">
                                     <form method="POST"
                                         action="/expense/<%= username %>/delete/<%= expense._id %>?_method=DELETE">
-                                        <button class="btn btn-danger del-btn"><i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+                                        <button class="btn btn-danger del-btn"><i class="fa-solid fa-trash"></i> &nbsp;
+                                            Delete</button>
                                     </form>
                                 </div>
                             </div>
                             <% }); %>
                                 <% } else { %>
-                                    <p>No expenses found.</p>
+                                    <h2 class="text-center">No expenses found.</h2>
                                     <% } %>
                 </div>
             </div>
@@ -386,6 +581,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </body>
 
 </html>

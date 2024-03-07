@@ -47,7 +47,11 @@ app.get("/", (req, res) => {
 
 //Login Route
 app.get("/login", (req, res) => {
-    res.render("login.ejs")
+    const {isNew}=req.query;
+    if (isNew){
+        return res.render("login.ejs",{isNew});
+    }
+    res.render("login.ejs",{isNew:false});
 });
 
 //Register Page
@@ -61,13 +65,14 @@ app.post("/register", async (req, res) => {
     try {
         const existingUser = await User.findOne({ username: username });
         if (existingUser) {
-            res.send("User Already Exists");
+            res.render("error.ejs", { err: "User Already Exists" });
         }
         const hashedPassword = await bcrypt.hash(password, 12);
         const newUser = new User({ username: username, password: hashedPassword });
         const token = jwt.sign({ username: newUser.username, id: newUser._id }, SECRET_KEY);
         await newUser.save();
-        res.redirect("/login");
+        const isNew=true;
+        res.redirect(`/login?isNew=${isNew}`);
     } catch (err) {
         res.render("error.ejs", { err: err });
     }
@@ -99,8 +104,11 @@ app.post("/login", async (req, res) => {
 app.get("/home/:username", async (req, res) => {
     try {
         const { username } = req.params;
-        const { sort, category } = req.query;
-
+        let { sort, category,isAll,isSorted,isByCategory } = req.query;
+        if (isAll===undefined){
+            isAll=1;
+        }
+        console.log(isAll);
         // Assuming User is your Mongoose model for users
         const user = await User.findOne({ username });
 
@@ -114,6 +122,7 @@ app.get("/home/:username", async (req, res) => {
         let categorizedExpenses;
         // Common query to fetch expenses for a user with population
         const baseQuery = Expense.find({ user: user._id }).populate("user");
+        const totalExpenses = expenses.reduce((acc, expense) => acc + expense.amount, 0);
 
         switch (sort) {
             case 'name':
@@ -144,14 +153,16 @@ app.get("/home/:username", async (req, res) => {
             case "others":
                 categorizedExpenses = await Expense.find({ user: user._id, category: "Others" }).populate("user");
                 break;
-
-            default:
+            case "all":
                 categorizedExpenses = await Expense.find({ user: user._id }).populate("user");
+                break;
+            default:
+                categorizedExpenses = await Expense.find({ user: user._id,category: "NO" }).populate("user");
 
-        }
-        res.render("home.ejs", { username: username, sortedExpenses: sortedExpenses, categorizedExpenses: categorizedExpenses, expenses: expenses, sort: sort });
+        };
+        res.render("home.ejs", { username: username, sortedExpenses: sortedExpenses, categorizedExpenses: categorizedExpenses, expenses: expenses, sort: sort,totalExpenses,isAll,isByCategory,isSorted });
     } catch (err) {
-        console.error('Error retrieving sortedExpenses:', error);
+        console.error('Error retrieving sortedExpenses:', err);
         res.render('error.ejs', { err: 'Internal Server Error' });
     }
 });
