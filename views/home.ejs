@@ -186,11 +186,12 @@
         }
 
         .options {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
             gap: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 10px 20px;
+            flex-direction: column !important;
 
         }
 
@@ -202,17 +203,18 @@
             border-radius: 10px;
         }
 
-    
+
 
         #monthlyExpensesChart,
         #categoryExpensesChart {
-            width: 700px !important;
+            width: 500px !important;
             height: 300px !important;
         }
-        .graphs{
+
+        .graphs {
             padding: 20px !important;
             display: flex;
-            flex-direction: row !important;
+            flex-direction: row;
             gap: 1rem !important;
             border: 1px solid #ddd;
             /* Light border color */
@@ -223,7 +225,9 @@
         }
 
         @media (max-width:1480px) {
-            #monthlyExpensesChart,#categoryExpensesChart {
+
+            #monthlyExpensesChart,
+            #categoryExpensesChart {
                 width: 500px !important;
                 height: 200px !important;
             }
@@ -236,54 +240,62 @@
                 gap: 2rem;
                 justify-content: center;
             }
-        
+
             .btns {
                 /* Your styles for screens with a minimum width of 1080 pixels */
                 display: flex;
                 gap: 2rem;
                 justify-content: flex-end;
             }
-            #monthlyExpensesChart,#categoryExpensesChart {
+
+            #monthlyExpensesChart,
+            #categoryExpensesChart {
                 width: 350px !important;
                 height: 200px !important;
             }
         }
+
         @media (min-width: 1080px) and (max-width: 830px) {
             .options {
                 /* Your styles for screens with a minimum width of 1080 pixels */
                 display: flex;
                 gap: 1rem;
                 justify-content: center;
+
             }
-        
+
             .btns {
                 /* Your styles for screens with a minimum width of 1080 pixels */
                 display: flex;
                 gap: 1rem;
                 justify-content: flex-end;
             }
-            #monthlyExpensesChart,#categoryExpensesChart {
+
+            #monthlyExpensesChart,
+            #categoryExpensesChart {
                 width: 350px !important;
                 height: 200px !important;
             }
-            .graphs{
+
+            .graphs {
                 flex-direction: column !important;
 
             }
         }
 
-        @media (max-width:830px) and (min-width: 420px) {
-            #monthlyExpensesChart,#categoryExpensesChart {
+        @media (max-width:830px) and (max-width: 420px) {
+
+            #monthlyExpensesChart,
+            #categoryExpensesChart {
                 width: 200px !important;
                 height: 100px !important;
             }
-            .graphs{
-                flex-direction: column !important;
+
+            .graphs {
+                flex-direction: column;
 
             }
         }
-
-        
     </style>
 </head>
 
@@ -614,7 +626,7 @@
             }
         });
 
-        
+
         // Chart.js initialization for category expenses
         const categoryCtx = document.getElementById('categoryExpensesChart').getContext('2d');
         const categoryChart = new Chart(categoryCtx, {

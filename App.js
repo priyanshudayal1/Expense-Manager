@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const authenticate = require("./middleware/authentication");
 const Expense = require("./models/expense");
-
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 
 const app = express();
@@ -26,6 +26,9 @@ app.use(methodOverride("_method"));
 
 const SECRET_KEY = "mynameispiyushdayal108fromindiafootballislove";
 
+
+const uri = "mongodb+srv://expense_manager:jkjV4fASbPPW2eMl@cluster0.q1hgfym.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
 //Connecting to the userbase
 main()
     .then(() => {
@@ -36,8 +39,10 @@ main()
     });
 
 async function main() {
-    await mongoose.connect("mongodb://localhost:27017/expense");
+    await mongoose.connect(uri);
 }
+
+
 
 
 //Index Route
@@ -47,11 +52,11 @@ app.get("/", (req, res) => {
 
 //Login Route
 app.get("/login", (req, res) => {
-    const {isNew}=req.query;
-    if (isNew){
-        return res.render("login.ejs",{isNew});
+    const { isNew } = req.query;
+    if (isNew) {
+        return res.render("login.ejs", { isNew });
     }
-    res.render("login.ejs",{isNew:false});
+    res.render("login.ejs", { isNew: false });
 });
 
 //Register Page
@@ -71,7 +76,7 @@ app.post("/register", async (req, res) => {
         const newUser = new User({ username: username, password: hashedPassword });
         const token = jwt.sign({ username: newUser.username, id: newUser._id }, SECRET_KEY);
         await newUser.save();
-        const isNew=true;
+        const isNew = true;
         res.redirect(`/login?isNew=${isNew}`);
     } catch (err) {
         res.render("error.ejs", { err: err });
@@ -82,9 +87,9 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
     const { username, password } = req.body;
     try {
-        let {isAll,isSorted,isByCategory } = req.query;
-        if (isAll===undefined && isByCategory===undefined && isSorted===undefined){
-            isAll=1;
+        let { isAll, isSorted, isByCategory } = req.query;
+        if (isAll === undefined && isByCategory === undefined && isSorted === undefined) {
+            isAll = 1;
         };
         const user = await User.findOne({ username: username });
         if (!user) {
@@ -98,7 +103,7 @@ app.post("/login", async (req, res) => {
         const sortedExpenses = await Expense.find({ user: user._id }).populate("user");
         const expenses = await Expense.find({ user: user._id }).populate("user");
         const categorizedExpenses = await Expense.find({ user: user._id }).populate("user");
-        res.render("home.ejs", { username: username, expenses: expenses, sortedExpenses: sortedExpenses, categorizedExpenses: categorizedExpenses,isAll,isSorted,isByCategory });
+        res.render("home.ejs", { username: username, expenses: expenses, sortedExpenses: sortedExpenses, categorizedExpenses: categorizedExpenses, isAll, isSorted, isByCategory });
     } catch (err) {
         res.render("error.ejs", { err: err });
     }
@@ -108,9 +113,9 @@ app.post("/login", async (req, res) => {
 app.get("/home/:username", async (req, res) => {
     try {
         const { username } = req.params;
-        let { sort, category,isAll,isSorted,isByCategory } = req.query;
-        if (isAll===undefined && isByCategory===undefined && isSorted===undefined){
-            isAll=1;
+        let { sort, category, isAll, isSorted, isByCategory } = req.query;
+        if (isAll === undefined && isByCategory === undefined && isSorted === undefined) {
+            isAll = 1;
         };
         // Assuming User is your Mongoose model for users
         const user = await User.findOne({ username });
@@ -160,10 +165,10 @@ app.get("/home/:username", async (req, res) => {
                 categorizedExpenses = await Expense.find({ user: user._id }).populate("user");
                 break;
             default:
-                categorizedExpenses = await Expense.find({ user: user._id,category: "NO" }).populate("user");
+                categorizedExpenses = await Expense.find({ user: user._id, category: "NO" }).populate("user");
 
         };
-        res.render("home.ejs", { username: username, sortedExpenses: sortedExpenses, categorizedExpenses: categorizedExpenses, expenses: expenses, sort: sort,totalExpenses,isAll,isByCategory,isSorted });
+        res.render("home.ejs", { username: username, sortedExpenses: sortedExpenses, categorizedExpenses: categorizedExpenses, expenses: expenses, sort: sort, totalExpenses, isAll, isByCategory, isSorted });
     } catch (err) {
         console.error('Error retrieving sortedExpenses:', err);
         res.render('error.ejs', { err: 'Internal Server Error' });
@@ -201,9 +206,9 @@ app.post("/expense/:username/new", async (req, res) => {
 //Deleting the Expense
 app.delete("/expense/:username/delete/:id", async (req, res) => {
     try {
-        let {isAll,isSorted,isByCategory } = req.query;
-        if (isAll===undefined && isByCategory===undefined && isSorted===undefined){
-            isAll=1;
+        let { isAll, isSorted, isByCategory } = req.query;
+        if (isAll === undefined && isByCategory === undefined && isSorted === undefined) {
+            isAll = 1;
         };
         const { id, username } = req.params;
         let expense = await Expense.findByIdAndDelete(id);
@@ -212,7 +217,7 @@ app.delete("/expense/:username/delete/:id", async (req, res) => {
         const sortedExpenses = await Expense.find({ user: user._id }).populate("user");
         const expenses = await Expense.find({ user: user._id }).populate("user");
         const categorizedExpenses = await Expense.find({ user: user._id }).populate("user");
-        res.render("home.ejs", { username: username, sortedExpenses: sortedExpenses,expenses,categorizedExpenses ,isSorted,isAll,isByCategory});
+        res.render("home.ejs", { username: username, sortedExpenses: sortedExpenses, expenses, categorizedExpenses, isSorted, isAll, isByCategory });
     } catch (err) {
         res.render("error.ejs", { err: err });
     }
